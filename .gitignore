@@ -1,0 +1,5 @@
+.DS_Store
+
+# Accidental lockfile: produced by running npm in this folder, not part of the
+# delivery. The starter keeps (and still tracks) its own package-lock.json.
+/package-lock.json
