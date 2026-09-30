@@ -1,10 +1,112 @@
 /**
  * Semantic tokens: what the primitives are *for*.
  *
- * This layer is yours. It is the seam between the raw palette in
- * `_primitives.scss` and the components that consume it, and it is what makes
- * a second theme possible without touching component styles.
+ * This is the layer between the raw values in `_primitives.scss` and the
+ * components. Kit components consume these roles and never a primitive, so a
+ * theme only ever has to re-point this file's tokens.
  *
- * Nothing here is prescribed: the roles you define, how you name them, and how
- * a theme overrides them are part of what the exercise is asking you to design.
+ * Rules this layer enforces:
+ * - A name describes a role, never an appearance (`--cw-color-text-muted`, not
+ *   `--cw-color-gray-600`).
+ * - Colour is a role and lives here. Spacing, radii, type and elevation stay
+ *   primitives: they are geometry, not theme.
+ * - No component style file may contain a colour literal (enforced by
+ *   `tokens.guard.spec.ts`).
+ *
+ * Contrast figures in the comments are measured against the light primitives
+ * (WCAG 2.1: 4.5:1 for text, 3:1 for control boundaries and meaningful
+ * graphics).
  */
+
+/// Light theme (the default). Applied to `:root` here and re-applied by
+/// `_themes.scss` for explicit light sub-trees.
+@mixin cw-tokens-light {
+  /* Surfaces */
+  --cw-color-canvas: var(--cw-gray-0);
+  --cw-color-surface: var(--cw-gray-0);
+  --cw-color-surface-sunken: var(--cw-gray-50);
+  --cw-color-surface-hover: var(--cw-gray-100);
+
+  /* Text */
+  --cw-color-text: var(--cw-gray-900); /* 16.56:1 */
+  --cw-color-text-muted: var(--cw-gray-600); /* 6.41:1 */
+  --cw-color-text-disabled: var(--cw-gray-500); /* 4.38:1 (disabled is exempt) */
+  --cw-color-text-inverse: var(--cw-gray-0);
+
+  /* Borders */
+  --cw-color-border-subtle: var(--cw-gray-200); /* decorative separators only */
+  --cw-color-border-control: var(--cw-gray-500); /* 4.38:1 - control boundary */
+
+  /* Accent (interactive) */
+  --cw-color-accent: var(--cw-blue-600); /* 6.61:1 on canvas */
+  --cw-color-accent-hover: var(--cw-blue-700); /* 8.99:1 on canvas */
+  --cw-color-accent-contrast: var(--cw-gray-0); /* 6.61:1 on accent */
+  --cw-color-accent-subtle: var(--cw-blue-50); /* 15.06:1 with text */
+  --cw-color-accent-text: var(--cw-blue-700); /* 8.99:1 on canvas */
+
+  /* Focus */
+  --cw-focus-ring-color: var(--cw-blue-600); /* 6.61:1 on canvas, 6.02:1 on accent-subtle */
+  --cw-focus-ring-width: 2px;
+  --cw-focus-ring-offset: 2px;
+
+  /* Status: neutral */
+  --cw-color-status-neutral-fg: var(--cw-gray-700); /* 8.88:1 */
+  --cw-color-status-neutral-bg: var(--cw-gray-50);
+  --cw-color-status-neutral-border: var(--cw-gray-200);
+  --cw-color-status-neutral-dot: var(--cw-gray-500);
+
+  /* Status: ready */
+  --cw-color-status-ready-fg: var(--cw-green-800); /* 9.26:1 */
+  --cw-color-status-ready-bg: var(--cw-green-50);
+  --cw-color-status-ready-border: var(--cw-green-100);
+  --cw-color-status-ready-dot: var(--cw-green-600);
+
+  /* Status: processing */
+  --cw-color-status-processing-fg: var(--cw-amber-800); /* 6.95:1 */
+  --cw-color-status-processing-bg: var(--cw-amber-50);
+  --cw-color-status-processing-border: var(--cw-amber-100);
+  --cw-color-status-processing-dot: var(--cw-amber-600);
+
+  /* Status: error */
+  --cw-color-status-error-fg: var(--cw-red-800); /* 9.52:1 */
+  --cw-color-status-error-bg: var(--cw-red-50);
+  --cw-color-status-error-border: var(--cw-red-100);
+  --cw-color-status-error-dot: var(--cw-red-600);
+
+  /* Form control surface */
+  --cw-control-bg: var(--cw-color-surface);
+  --cw-control-border: var(--cw-color-border-control);
+  --cw-control-text: var(--cw-color-text);
+  --cw-control-placeholder: var(--cw-color-text-muted);
+  --cw-control-padding-y: var(--cw-space-2);
+  --cw-control-padding-x: var(--cw-space-3);
+  --cw-control-gap: var(--cw-space-2);
+  --cw-control-font-size: var(--cw-font-size-sm);
+  --cw-control-radius: var(--cw-radius-md);
+
+  /* Popup */
+  --cw-popup-bg: var(--cw-color-surface);
+  --cw-popup-border: var(--cw-color-border-control);
+  --cw-popup-shadow: var(--cw-shadow-md);
+  --cw-popup-radius: var(--cw-radius-md);
+  --cw-popup-max-height: calc(var(--cw-space-6) * 8); /* 16rem */
+  --cw-popup-offset: var(--cw-space-1);
+  --cw-popup-padding: var(--cw-space-1);
+
+  /* Options */
+  --cw-option-padding-y: var(--cw-space-2);
+  --cw-option-padding-x: var(--cw-space-3);
+  --cw-option-gap: var(--cw-space-2);
+  --cw-option-text: var(--cw-color-text);
+  --cw-option-text-muted: var(--cw-color-text-muted);
+  --cw-option-text-disabled: var(--cw-color-text-disabled);
+  --cw-option-bg-hover: var(--cw-color-surface-hover);
+  --cw-option-bg-active: var(--cw-color-accent-subtle);
+  --cw-option-bg-selected: var(--cw-color-accent);
+  --cw-option-text-selected: var(--cw-color-accent-contrast);
+  --cw-option-radius: var(--cw-radius-sm);
+}
+
+:root {
+  @include cw-tokens-light;
+}

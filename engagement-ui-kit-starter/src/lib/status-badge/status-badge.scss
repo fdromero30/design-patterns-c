@@ -1,56 +1,77 @@
+/**
+ * Component tokens.
+ *
+ * The component never reads a primitive and never hard-codes a colour: it binds
+ * its own custom properties to semantic roles, which is the seam a theme (or a
+ * consumer, on any ancestor) overrides without touching this file.
+ */
 :host {
+  --cw-status-badge-fg: var(--cw-color-status-neutral-fg);
+  --cw-status-badge-bg: var(--cw-color-status-neutral-bg);
+  --cw-status-badge-border: var(--cw-color-status-neutral-border);
+  --cw-status-badge-dot: var(--cw-color-status-neutral-dot);
+  --cw-status-badge-padding-y: var(--cw-space-1);
+  --cw-status-badge-padding-x: var(--cw-space-2);
+  --cw-status-badge-font-size: var(--cw-font-size-sm);
+  --cw-status-badge-dot-size: 0.5rem;
+
   display: inline-block;
 }
 
-.badge {
+:host([data-status='ready']) {
+  --cw-status-badge-fg: var(--cw-color-status-ready-fg);
+  --cw-status-badge-bg: var(--cw-color-status-ready-bg);
+  --cw-status-badge-border: var(--cw-color-status-ready-border);
+  --cw-status-badge-dot: var(--cw-color-status-ready-dot);
+}
+
+:host([data-status='processing']) {
+  --cw-status-badge-fg: var(--cw-color-status-processing-fg);
+  --cw-status-badge-bg: var(--cw-color-status-processing-bg);
+  --cw-status-badge-border: var(--cw-color-status-processing-border);
+  --cw-status-badge-dot: var(--cw-color-status-processing-dot);
+}
+
+:host([data-status='error']) {
+  --cw-status-badge-fg: var(--cw-color-status-error-fg);
+  --cw-status-badge-bg: var(--cw-color-status-error-bg);
+  --cw-status-badge-border: var(--cw-color-status-error-border);
+  --cw-status-badge-dot: var(--cw-color-status-error-dot);
+}
+
+:host([data-size='sm']) {
+  --cw-status-badge-padding-y: var(--cw-space-0);
+  --cw-status-badge-font-size: var(--cw-font-size-xs);
+  --cw-status-badge-dot-size: 0.375rem;
+}
+
+:host([data-size='lg']) {
+  --cw-status-badge-padding-y: var(--cw-space-2);
+  --cw-status-badge-font-size: var(--cw-font-size-md);
+}
+
+.cw-status-badge {
   align-items: center;
-  background: #f6f8fa;
-  border: 1px solid #d8dee6;
-  border-radius: 10px;
-  color: #9aa5b1;
+  background: var(--cw-status-badge-bg);
+  border: 1px solid var(--cw-status-badge-border);
+  border-radius: var(--cw-radius-pill);
+  color: var(--cw-status-badge-fg);
   display: inline-flex;
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    Arial,
-    sans-serif;
-  font-size: 12px;
-  gap: 6px;
-  padding: 2px 8px;
+  font-size: var(--cw-status-badge-font-size);
+  font-weight: var(--cw-font-weight-medium);
+  gap: var(--cw-space-1);
+  line-height: var(--cw-line-height-tight);
+  padding: var(--cw-status-badge-padding-y) var(--cw-status-badge-padding-x);
 }
 
-.dot {
-  background: #9aa5b1;
-  border-radius: 50%;
+.cw-status-badge__dot {
+  background: var(--cw-status-badge-dot);
+  border-radius: var(--cw-radius-pill);
   flex: 0 0 auto;
-  height: 8px;
-  width: 8px;
+  height: var(--cw-status-badge-dot-size);
+  width: var(--cw-status-badge-dot-size);
 }
 
-.badge-ready .dot {
-  background: #1a7f37;
-}
-
-.badge-processing .dot {
-  background: #bf8700;
-}
-
-.badge-error .dot {
-  background: #cf222e;
-}
-
-.badge-sm {
-  font-size: 11px !important;
-  padding: 1px 6px !important;
-}
-
-.badge-lg {
-  font-size: 14px !important;
-  padding: 4px 12px !important;
-}
-
-::ng-deep .engagement-row .badge {
-  margin-left: 4px;
+.cw-status-badge__label {
+  white-space: nowrap;
 }

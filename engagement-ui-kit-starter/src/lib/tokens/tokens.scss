@@ -1,6 +1,11 @@
 /**
  * The kit's style entry point. Imported once, globally, from `src/styles.scss`.
+ *
+ * Order matters: `themes` re-points the tokens declared by `semantic`, and both
+ * target selectors with the same specificity (`:root` vs `[data-cw-theme]`), so
+ * the theme layer has to come last.
  */
 
 @use 'primitives';
 @use 'semantic';
+@use 'themes';

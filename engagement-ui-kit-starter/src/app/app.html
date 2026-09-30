@@ -1,5 +1,10 @@
 <header class="wb-header">
-  <h1>Engagement UI kit — workbench</h1>
+  <div class="wb-header__top">
+    <h1>Engagement UI kit — workbench</h1>
+    <button class="wb-theme-toggle" type="button" (click)="toggleTheme()">
+      Theme: {{ theme() }}
+    </button>
+  </div>
   <p class="wb-lede">
     A consumer of the kit in <code>src/lib</code>. Build, demonstrate and review components here.
   </p>
@@ -8,18 +13,76 @@
 <main class="wb-main">
   <section class="wb-section">
     <h2>Status badge</h2>
-    <p class="wb-note">The supplied component, in the states the engagement list needs.</p>
+    <p class="wb-note">
+      Every status and every size. The label falls back to the humanised status, so consumers stop
+      mapping enums to display text by hand, and the text is what assistive technology reads — the
+      dot is decoration.
+    </p>
 
     <div class="wb-specimens">
-      <cw-status-badge label="Ready" [isReady]="true"></cw-status-badge>
+      @for (status of statuses; track status) {
+        <cw-status-badge [status]="status" />
+      }
+      <cw-status-badge status="ready" size="sm" />
+      <cw-status-badge status="ready" size="lg" />
       <cw-status-badge
-        label="Processing"
-        [isProcessing]="true"
-        tooltip="The server is still preparing this engagement"
-      ></cw-status-badge>
-      <cw-status-badge label="Error" [isError]="true"></cw-status-badge>
-      <cw-status-badge label="Ready" [isReady]="true" [isSmall]="true"></cw-status-badge>
-      <cw-status-badge label="Ready" [isReady]="true" [isLarge]="true"></cw-status-badge>
+        status="processing"
+        [tooltip]="'The server is still preparing this engagement'"
+      />
+      <cw-status-badge status="error" live />
+    </div>
+  </section>
+
+  <section class="wb-section">
+    <h2>Review filters</h2>
+    <p class="wb-note">
+      The reviewer picker, dropped on the form control that was already here. The second control is
+      the same component for a change group: it is a generic single-select, not a reviewer-specific
+      widget. Both work with keyboard only.
+    </p>
+
+    <div class="wb-filters">
+      <cw-select
+        label="Reviewer"
+        placeholder="Select a reviewer"
+        [options]="reviewerOptions"
+        [formControl]="reviewerId"
+      />
+
+      <cw-select
+        label="Change group"
+        placeholder="Select a change group"
+        [options]="changeGroupOptions"
+        [formControl]="changeGroup"
+      />
+    </div>
+
+    <dl class="wb-state">
+      <dt>reviewer value</dt>
+      <dd>{{ reviewerId.value ?? '—' }}</dd>
+      <dt>touched</dt>
+      <dd>{{ reviewerId.touched }}</dd>
+      <dt>dirty</dt>
+      <dd>{{ reviewerId.dirty }}</dd>
+      <dt>change group value</dt>
+      <dd>{{ changeGroup.value ?? '—' }}</dd>
+    </dl>
+  </section>
+
+  <section class="wb-section">
+    <h2>Several hundred options</h2>
+    <p class="wb-note">
+      The same picker with 300 options (every seventh one unavailable). Typing jumps to a match; the
+      list is not virtualised, which is out of scope on purpose.
+    </p>
+
+    <div class="wb-filters">
+      <cw-select
+        label="Bulk reviewer"
+        placeholder="Select a reviewer"
+        [options]="manyOptions"
+        [formControl]="manyReviewerId"
+      />
     </div>
   </section>
 
@@ -35,41 +98,11 @@
             <span class="engagement-client">{{ engagement.clientName }}</span>
           </span>
 
-          <span class="engagement-pending"> {{ engagement.pendingChangeCount }} pending </span>
+          <span class="engagement-pending">{{ engagement.pendingChangeCount }} pending</span>
 
-          <cw-status-badge
-            [label]="engagement.status"
-            [isReady]="engagement.status === 'READY'"
-            [isProcessing]="engagement.status === 'PROCESSING'"
-            [isError]="engagement.status === 'ERROR'"
-          ></cw-status-badge>
+          <cw-status-badge [status]="toStatus(engagement.status)" />
         </li>
       }
     </ul>
-  </section>
-
-  <section class="wb-section">
-    <h2>Review filters</h2>
-    <p class="wb-note">
-      Where the reviewer picker belongs. The form control below is already here, so a
-      form-integrated component can be dropped straight in.
-    </p>
-
-    <div class="wb-placeholder">
-      <p>No reviewer picker yet.</p>
-      <p class="wb-note">
-        {{ reviewers.length }} reviewers and {{ changeGroups.length }} change groups are available
-        in <code>src/app/data/engagement-fixtures.ts</code>.
-      </p>
-    </div>
-
-    <dl class="wb-state">
-      <dt>value</dt>
-      <dd>{{ reviewerId.value ?? '—' }}</dd>
-      <dt>touched</dt>
-      <dd>{{ reviewerId.touched }}</dd>
-      <dt>dirty</dt>
-      <dd>{{ reviewerId.dirty }}</dd>
-    </dl>
   </section>
 </main>

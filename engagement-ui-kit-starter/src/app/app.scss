@@ -1,4 +1,8 @@
-/* Workbench layout only. The workbench is a consumer, not part of the kit. */
+/*
+ * Workbench layout only. The workbench is a consumer, not part of the kit: it
+ * consumes semantic tokens, the same way a component does, so the theme covers
+ * it too.
+ */
 
 .wb-header,
 .wb-main {
@@ -8,8 +12,15 @@
 }
 
 .wb-header {
-  border-bottom: 1px solid var(--cw-gray-200);
+  border-bottom: 1px solid var(--cw-color-border-subtle);
   padding-block: var(--cw-space-5);
+}
+
+.wb-header__top {
+  align-items: baseline;
+  display: flex;
+  gap: var(--cw-space-4);
+  justify-content: space-between;
 }
 
 .wb-header h1 {
@@ -18,8 +29,23 @@
 }
 
 .wb-lede {
-  color: var(--cw-gray-600);
-  margin-block: var(--cw-space-1) 0;
+  color: var(--cw-color-text-muted);
+  margin-block: var(--cw-space-2) 0;
+}
+
+.wb-theme-toggle {
+  background: var(--cw-color-surface);
+  border: 1px solid var(--cw-color-border-control);
+  border-radius: var(--cw-radius-md);
+  color: var(--cw-color-text);
+  cursor: pointer;
+  padding: var(--cw-space-1) var(--cw-space-3);
+  white-space: nowrap;
+}
+
+.wb-theme-toggle:focus-visible {
+  outline: var(--cw-focus-ring-width) solid var(--cw-focus-ring-color);
+  outline-offset: var(--cw-focus-ring-offset);
 }
 
 .wb-main {
@@ -27,7 +53,7 @@
 }
 
 .wb-section {
-  border-top: 1px solid var(--cw-gray-100);
+  border-top: 1px solid var(--cw-color-border-subtle);
   padding-block: var(--cw-space-5);
 }
 
@@ -41,7 +67,7 @@
 }
 
 .wb-note {
-  color: var(--cw-gray-600);
+  color: var(--cw-color-text-muted);
   font-size: var(--cw-font-size-sm);
 }
 
@@ -50,6 +76,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--cw-space-3);
+}
+
+.wb-filters {
+  display: grid;
+  gap: var(--cw-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  max-width: 40rem;
 }
 
 .engagement-list {
@@ -63,7 +96,7 @@
 
 .engagement-row {
   align-items: center;
-  border: 1px solid var(--cw-gray-200);
+  border: 1px solid var(--cw-color-border-subtle);
   border-radius: var(--cw-radius-md);
   display: flex;
   gap: var(--cw-space-3);
@@ -82,24 +115,22 @@
 }
 
 .engagement-client {
-  color: var(--cw-gray-600);
+  color: var(--cw-color-text-muted);
   font-size: var(--cw-font-size-sm);
 }
 
 .engagement-pending {
-  color: var(--cw-gray-600);
+  color: var(--cw-color-text-muted);
   font-size: var(--cw-font-size-sm);
   white-space: nowrap;
 }
 
-.wb-placeholder {
-  border: 1px dashed var(--cw-gray-300);
-  border-radius: var(--cw-radius-md);
-  padding: var(--cw-space-4);
-}
-
-.wb-placeholder p {
-  margin: 0;
+/*
+ * The kit used to reach into this list from its own stylesheet (`::ng-deep` on
+ * a consumer class). Spacing around a component is the consumer's job.
+ */
+.engagement-row cw-status-badge {
+  margin-inline-start: var(--cw-space-1);
 }
 
 .wb-state {
@@ -110,7 +141,7 @@
 }
 
 .wb-state dt {
-  color: var(--cw-gray-600);
+  color: var(--cw-color-text-muted);
   font-size: var(--cw-font-size-sm);
 }
 

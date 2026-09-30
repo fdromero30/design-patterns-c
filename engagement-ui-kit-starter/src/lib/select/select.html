@@ -1,0 +1,62 @@
+<div class="cw-select">
+  <!--
+    The trigger is a div with role="combobox": a div is not a labelable element,
+    so the label is associated through aria-labelledby instead of a <label for>.
+  -->
+  <span class="cw-select__label" [id]="labelId()">{{ label() }}</span>
+
+  <div
+    #trigger
+    class="cw-select__trigger"
+    role="combobox"
+    aria-autocomplete="none"
+    aria-haspopup="listbox"
+    [id]="triggerId()"
+    [attr.tabindex]="isDisabled() ? -1 : 0"
+    [attr.aria-labelledby]="labelId()"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="listboxId()"
+    [attr.aria-activedescendant]="activeDescendantId()"
+    [attr.aria-disabled]="isDisabled() ? 'true' : null"
+    [attr.aria-invalid]="invalid() ? 'true' : null"
+    (click)="onTriggerClick()"
+    (keydown)="onTriggerKeydown($event)"
+    (blur)="onTriggerBlur()"
+  >
+    <span class="cw-select__value" [class.cw-select__value--placeholder]="!selectedLabel()">
+      {{ selectedLabel() || placeholder() }}
+    </span>
+    <span class="cw-select__chevron" aria-hidden="true"></span>
+  </div>
+
+  @if (isOpen()) {
+    <div class="cw-select__popup">
+      <div
+        class="cw-select__listbox"
+        role="listbox"
+        [id]="listboxId()"
+        [attr.aria-labelledby]="labelId()"
+        (mousedown)="onListboxMouseDown($event)"
+      >
+        @for (option of options(); track option.value; let index = $index) {
+          <div
+            class="cw-select__option"
+            role="option"
+            [id]="optionId(index)"
+            [attr.aria-selected]="option.value === value() ? 'true' : null"
+            [attr.aria-disabled]="option.disabled ? 'true' : null"
+            [class.cw-select__option--active]="index === activeIndex()"
+            [class.cw-select__option--selected]="option.value === value()"
+            [class.cw-select__option--disabled]="option.disabled"
+            (click)="onOptionClick(index)"
+          >
+            <span class="cw-select__option-label">{{ option.label }}</span>
+            @if (option.description) {
+              <span class="cw-select__option-description">{{ option.description }}</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

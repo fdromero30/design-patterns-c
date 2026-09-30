@@ -4,6 +4,10 @@
  * The kit's tokens are loaded here, once, for the whole document. Beyond that
  * this file carries only a small reset and readable element defaults — the
  * styling architecture above it is yours to design.
+ *
+ * Colours come from the semantic layer, never from a primitive: the workbench
+ * has to theme itself the same way a component does. Spacing, radii and type
+ * stay on primitives — they are geometry, not theme.
  */
 
 @use './lib/tokens/tokens';
@@ -15,7 +19,8 @@
 }
 
 body {
-  color: var(--cw-gray-900);
+  background: var(--cw-color-canvas);
+  color: var(--cw-color-text);
   font-family: var(--cw-font-sans);
   line-height: var(--cw-line-height-normal);
   margin: 0;
@@ -33,7 +38,7 @@ p {
 }
 
 code {
-  background: var(--cw-gray-50);
+  background: var(--cw-color-surface-sunken);
   border-radius: var(--cw-radius-sm);
   font-size: 0.875em;
   padding: 0.1em 0.3em;

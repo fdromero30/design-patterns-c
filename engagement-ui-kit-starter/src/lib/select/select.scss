@@ -1,0 +1,135 @@
+/**
+ * Component tokens. Colours come from semantic roles; the component-level
+ * custom properties below are the seam a consumer or a theme can override on any
+ * ancestor without touching this file.
+ */
+:host {
+  --cw-select-control-bg: var(--cw-control-bg);
+  --cw-select-control-border: var(--cw-control-border);
+  --cw-select-control-text: var(--cw-control-text);
+  --cw-select-control-placeholder: var(--cw-control-placeholder);
+  --cw-select-popup-bg: var(--cw-popup-bg);
+
+  display: block;
+  position: relative;
+}
+
+.cw-select__label {
+  color: var(--cw-color-text);
+  display: block;
+  font-size: var(--cw-font-size-sm);
+  font-weight: var(--cw-font-weight-medium);
+  margin-block-end: var(--cw-space-1);
+}
+
+.cw-select__trigger {
+  align-items: center;
+  background: var(--cw-select-control-bg);
+  border: 1px solid var(--cw-select-control-border);
+  border-radius: var(--cw-control-radius);
+  color: var(--cw-select-control-text);
+  cursor: pointer;
+  display: flex;
+  font-size: var(--cw-control-font-size);
+  gap: var(--cw-control-gap);
+  justify-content: space-between;
+  padding: var(--cw-control-padding-y) var(--cw-control-padding-x);
+  user-select: none;
+}
+
+/* The focus ring is ours to draw: a div has no native focus style. */
+.cw-select__trigger:focus-visible {
+  outline: var(--cw-focus-ring-width) solid var(--cw-focus-ring-color);
+  outline-offset: var(--cw-focus-ring-offset);
+}
+
+:host([data-open]) .cw-select__trigger {
+  border-color: var(--cw-color-accent);
+}
+
+:host([data-disabled]) .cw-select__trigger {
+  background: var(--cw-color-surface-sunken);
+  border-color: var(--cw-color-border-subtle);
+  color: var(--cw-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.cw-select__value--placeholder {
+  color: var(--cw-select-control-placeholder);
+}
+
+.cw-select__chevron {
+  border-block-end: 2px solid currentColor;
+  border-inline-end: 2px solid currentColor;
+  flex: 0 0 auto;
+  height: 0.4rem;
+  transform: rotate(45deg) translateY(-0.1rem);
+  width: 0.4rem;
+}
+
+.cw-select__popup {
+  background: var(--cw-select-popup-bg);
+  border: 1px solid var(--cw-popup-border);
+  border-radius: var(--cw-popup-radius);
+  box-shadow: var(--cw-popup-shadow);
+  inset-block-start: calc(100% + var(--cw-popup-offset));
+  inset-inline: 0;
+  max-height: var(--cw-popup-max-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--cw-popup-padding);
+  position: absolute;
+  z-index: 10;
+}
+
+.cw-select__listbox {
+  display: flex;
+  flex-direction: column;
+}
+
+.cw-select__option {
+  align-items: baseline;
+  border-radius: var(--cw-option-radius);
+  color: var(--cw-option-text);
+  cursor: pointer;
+  display: flex;
+  gap: var(--cw-option-gap);
+  padding: var(--cw-option-padding-y) var(--cw-option-padding-x);
+}
+
+.cw-select__option-description {
+  color: var(--cw-option-text-muted);
+  font-size: var(--cw-font-size-xs);
+}
+
+.cw-select__option:hover:not(.cw-select__option--disabled) {
+  background: var(--cw-option-bg-hover);
+}
+
+/*
+ * The active option is the one the combobox points at with
+ * aria-activedescendant. Its fill is a tint; the ring is what makes it visible
+ * on either theme, where a dark fill cannot reach 3:1 against the popup.
+ */
+.cw-select__option--active {
+  outline: var(--cw-focus-ring-width) solid var(--cw-focus-ring-color);
+  outline-offset: calc(-1 * var(--cw-focus-ring-width));
+}
+
+.cw-select__option--active:not(.cw-select__option--selected) {
+  background: var(--cw-option-bg-active);
+}
+
+.cw-select__option--selected {
+  background: var(--cw-option-bg-selected);
+  color: var(--cw-option-text-selected);
+}
+
+.cw-select__option--selected .cw-select__option-description {
+  color: inherit;
+}
+
+.cw-select__option--disabled {
+  color: var(--cw-option-text-disabled);
+  cursor: not-allowed;
+}

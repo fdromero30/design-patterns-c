@@ -1,0 +1,115 @@
+/**
+ * Themes: alternative values for the semantic layer.
+ *
+ * A theme is nothing more than a set of semantic tokens re-pointed at different
+ * primitives. No component style participates, which is why a second theme
+ * costs a few dozen lines instead of a fork of every component.
+ *
+ * How a theme is selected:
+ * - `data-cw-theme="dark"` / `data-cw-theme="light"` on any element. The token
+ *   declarations land on that element, so a theme can be scoped to a sub-tree
+ *   (useful in a micro-frontend, or for a per-panel override).
+ * - No attribute: light, unless the OS asks for dark and the consumer has not
+ *   opted out (the `prefers-color-scheme` block below).
+ *
+ * `color-scheme` is set alongside the tokens so native UI (scrollbars, form
+ * controls, `::selection`) follows the theme.
+ *
+ * Cascade note: this file must be `@use`d *after* `_semantic.scss`. `:root` and
+ * `[data-cw-theme]` have the same specificity (0,1,0), so source order decides.
+ */
+
+@use 'semantic';
+
+/// Dark theme.
+@mixin cw-tokens-dark {
+  /* Surfaces */
+  --cw-color-canvas: var(--cw-gray-900);
+  --cw-color-surface: var(--cw-gray-800);
+  --cw-color-surface-sunken: var(--cw-gray-900);
+  --cw-color-surface-hover: var(--cw-gray-700); /* 8.88:1 with text */
+
+  /* Text */
+  --cw-color-text: var(--cw-gray-50); /* 15.56:1 */
+  --cw-color-text-muted: var(--cw-gray-300); /* 9.57:1 */
+  --cw-color-text-disabled: var(--cw-gray-400); /* 5.19:1 on surface */
+  --cw-color-text-inverse: var(--cw-gray-900);
+
+  /* Borders */
+  --cw-color-border-subtle: var(--cw-gray-600); /* decorative separators only */
+  --cw-color-border-control: var(--cw-gray-400); /* 5.19:1 on surface */
+
+  /* Accent (interactive). On dark, accents move *lighter* to keep contrast. */
+  --cw-color-accent: var(--cw-blue-400); /* 4.50:1 on canvas */
+  --cw-color-accent-hover: var(--cw-blue-200); /* 9.65:1 on canvas */
+  --cw-color-accent-contrast: var(--cw-gray-900); /* 4.50:1 on accent */
+  --cw-color-accent-subtle: var(--cw-blue-800); /* tinted background */
+  --cw-color-accent-text: var(--cw-blue-200); /* 9.65:1 on canvas */
+
+  /* Focus */
+  --cw-focus-ring-color: var(--cw-blue-200); /* 7.56:1 on surface */
+
+  /* Status: neutral */
+  --cw-color-status-neutral-fg: var(--cw-gray-100); /* 8.11:1 */
+  --cw-color-status-neutral-bg: var(--cw-gray-700);
+  --cw-color-status-neutral-border: var(--cw-gray-600);
+  --cw-color-status-neutral-dot: var(--cw-gray-100);
+
+  /* Status: ready */
+  --cw-color-status-ready-fg: var(--cw-green-100); /* 7.77:1 */
+  --cw-color-status-ready-bg: var(--cw-green-800);
+  --cw-color-status-ready-border: var(--cw-green-700);
+  --cw-color-status-ready-dot: var(--cw-green-100);
+
+  /* Status: processing */
+  --cw-color-status-processing-fg: var(--cw-amber-100); /* 6.07:1 */
+  --cw-color-status-processing-bg: var(--cw-amber-800);
+  --cw-color-status-processing-border: var(--cw-amber-700);
+  --cw-color-status-processing-dot: var(--cw-amber-100);
+
+  /* Status: error */
+  --cw-color-status-error-fg: var(--cw-red-100); /* 7.53:1 */
+  --cw-color-status-error-bg: var(--cw-red-800);
+  --cw-color-status-error-border: var(--cw-red-700);
+  --cw-color-status-error-dot: var(--cw-red-100);
+
+  /* Options */
+  /*
+   * On dark, a filled state can never reach 3:1 against the popup surface
+   * (blue-800 is 1.11:1, gray-700 is 1.37:1, blue-600 is 1.96:1), so the
+   * active option is indicated by the focus ring below and its fill is only a
+   * tint. `--cw-option-bg-selected` is the one fill that does clear 3:1
+   * (blue-400 on gray-800) and the text on it is 4.50:1.
+   */
+  --cw-option-bg-hover: var(--cw-gray-700);
+  --cw-option-bg-active: var(--cw-color-accent-subtle);
+  --cw-option-bg-selected: var(--cw-blue-400);
+  --cw-option-text-selected: var(--cw-gray-900);
+}
+
+/* Default: light, so the document does not depend on the OS preference. */
+:root {
+  color-scheme: light;
+}
+
+[data-cw-theme='light'] {
+  @include semantic.cw-tokens-light;
+  color-scheme: light;
+}
+
+[data-cw-theme='dark'] {
+  @include cw-tokens-dark;
+  color-scheme: dark;
+}
+
+/*
+ * Opt-in convenience: follow the OS when the consumer has not set the
+ * attribute. `:root:not([data-cw-theme])` is specific enough to lose to
+ * `[data-cw-theme='light']`, so an explicit choice always wins.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-cw-theme]) {
+    @include cw-tokens-dark;
+    color-scheme: dark;
+  }
+}
