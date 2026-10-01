@@ -52,16 +52,9 @@ import type { CwSelectOption, CwStatus } from '../lib/public-api';
 
 ## Screenshots
 
-Screenshots of each component, in both themes, live in
-[`../../documentation/images/`](../../documentation/images) (see the shot list there). The markup
-below is ready and commented out until the files exist:
-
-<!--
-| Component | Default theme | Alternative theme |
-| --- | --- | --- |
-| `cw-select` | ![cw-select with a value selected](../../documentation/images/cw-select-closed.png) | ![cw-select open in the alternative theme](../../documentation/images/cw-select-open.png) |
-| `cw-status-badge` | ![The four badge statuses](../../documentation/images/cw-status-badge-light.png) | ![The four badge statuses in the alternative theme](../../documentation/images/cw-status-badge-dark.png) |
--->
+Component screenshots live with the repository README:
+[the Screenshots section](../README.md#screenshots). One place for images, so this file cannot
+advertise a screenshot that does not exist.
 
 ## Theming
 

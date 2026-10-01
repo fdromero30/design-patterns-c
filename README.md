@@ -88,15 +88,12 @@ counts, ordering or values.
 
 ## Screenshots
 
-Screenshots live in [`documentation/images/`](documentation/images), with a shot list describing
-what to capture and the exact filenames. The markup below is ready and commented out until the
-files exist, so the README never carries a broken image:
+The workbench, in both themes ([`documentation/images/`](documentation/images) has the shot list
+for what to capture):
 
-<!--
-| Default theme | Alternative theme |
-| --- | --- |
+| Default theme                                                                   | Alternative theme                                                                  |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | ![The workbench in the default theme](documentation/images/workbench-light.png) | ![The workbench in the alternative theme](documentation/images/workbench-dark.png) |
--->
 
 ## How the kit is put together
 
