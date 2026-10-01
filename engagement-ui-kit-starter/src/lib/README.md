@@ -1,5 +1,10 @@
 # The kit (`src/lib`)
 
+This is the kit's own documentation: its public API, theming and contribution rules, for the
+teams that consume it. To run the application see [`../README.md`](../README.md); the reasoning
+behind the design is in
+[`../documentation/DECISIONS.md`](../documentation/DECISIONS.md).
+
 Everything a consumer needs is re-exported from [`public-api.ts`](./public-api.ts). Consumers
 import from there and never reach into a component folder.
 
@@ -80,3 +85,6 @@ The kit is built on three token levels in [`tokens/`](./tokens):
    labelled has a required `label`).
 4. Document the ARIA pattern in the class comment, including what was deliberately left out.
 5. Run `npm test -- --watch=false` before proposing the change.
+
+One source of truth: this file owns the kit's API and theming rules; the repository README links
+here instead of describing them again.
