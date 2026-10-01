@@ -365,13 +365,19 @@ export class CwSelect implements ControlValueAccessor {
     }, TYPE_AHEAD_RESET_MS);
 
     const options = this.options();
-    // A single character cycles from the active option; a longer query searches
-    // the whole list for the full string.
-    const from = this.typeBuffer.length === 1 ? Math.max(this.activeIndex(), -1) + 1 : 0;
+    const buffer = this.typeBuffer;
+    // Pressing the same letter again (e.g. "c", "c") cycles through the matches
+    // from the active option, like a native <select>, so the query collapses to
+    // that one repeated letter. A fresh query searches from the top so the first
+    // match wins; any other longer query looks for the full typed string.
+    const isRepeated =
+      buffer.length > 1 && [...buffer].every((character) => character === buffer[0]);
+    const query = isRepeated ? buffer[0] : buffer;
+    const from = isRepeated ? Math.max(this.activeIndex(), -1) + 1 : 0;
     for (let offset = 0; offset < options.length; offset++) {
       const index = (from + offset) % options.length;
       const option = options[index];
-      if (!option.disabled && option.label.toLowerCase().startsWith(this.typeBuffer)) {
+      if (!option.disabled && option.label.toLowerCase().startsWith(query)) {
         this.setActive(index);
         return;
       }

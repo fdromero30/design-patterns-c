@@ -52,4 +52,16 @@ describe('StatusBadge', () => {
     const live = await render('ready', { live: true });
     expect(live.querySelector('.cw-status-badge')?.getAttribute('role')).toBe('status');
   });
+
+  it('only emits a title attribute when a tooltip is given', async () => {
+    // `title=""` is announced as an empty tooltip, so the attribute must be
+    // absent rather than empty when there is nothing to say.
+    const plain = await render('ready');
+    expect(plain.querySelector('.cw-status-badge')?.hasAttribute('title')).toBe(false);
+
+    const withTooltip = await render('ready', { tooltip: 'Still preparing' });
+    expect(withTooltip.querySelector('.cw-status-badge')?.getAttribute('title')).toBe(
+      'Still preparing',
+    );
+  });
 });

@@ -1,8 +1,8 @@
 # Decisions
 
-Context: this was built against the take-home brief. Part 1 (the reviewer picker) and
-Part 2 (tokens, theming and the inherited `cw-status-badge`) are implemented; the focused
-test suite and `ADOPTION.md` are the next steps and are tracked in the submission notes.
+Context: this was built against the take-home brief. Part 1 (the reviewer picker), Part 2
+(tokens, theming and the inherited `cw-status-badge`) and the focused test suite are in place;
+anything still outstanding is tracked in the submission notes.
 
 Legend: "APG" is the W3C WAI **ARIA Authoring Practices Guide**. It is guidance, not a
 norm. The normative references used here are WAI-ARIA 1.2 (`combobox` role), HTML-ARIA
@@ -81,13 +81,23 @@ next iteration and does not change this API.
 
 ## 4. Typing jumps to a match; it does not filter the list
 
-**Decision.** Printable characters open the list if needed and move the active option to the
-first match (buffered keystrokes, `Space` opens instead of typing).
+**Decision.** Printable characters open the list if needed and move the active option to a
+match: a fresh query selects the **first** match from the top of the list, and pressing the
+same letter again cycles through the matches from the active option, like a native `<select>`
+(buffered keystrokes, `Space` opens instead of typing).
 
 **Why.** It is what a native `<select>` does and what the APG select-only combobox specifies.
 The popup stays a plain `listbox` (a `textbox` inside a `listbox` is not valid), the value
 keeps belonging to a closed set of options, and there is no query state, no "no results"
 state and no live result count to maintain.
+
+**A bug the suite caught.** The first implementation started every search just after the active
+option, so opening the list with a letter and then typing another skipped the first match
+(with `Ana`, `Bruno`, `Carla`, a `c` landed on `Carla` instead of `Ana`), and repeating a letter
+built a buffer like `"cc"` that matched nothing. Neither is visible in the markup; both fell
+out of pressing real keys. The tests were written to fail first (`expected 'Cesar' to be
+'Carla'`) before the search was changed to start at the top for a fresh query and only cycle
+for a repeated letter.
 
 **Alternative considered.** An editable combobox that filters as you type. It is genuinely
 better for discovering one option among hundreds, and it is the honest cost of this decision.
@@ -174,6 +184,12 @@ here the honest option is one clean major plus a migration table in `ADOPTION.md
   which would have made the guard silently vacuous. Runtime cost: none (dev-only types).
 - **`label` is a required input on `cw-select`.** The brief requires the control to be
   labelled; a kit that lets that be forgotten will have unlabelled controls in production.
+- **Type-ahead semantics are pinned by tests, not prose.** `select.spec.ts` asserts that a
+  fresh query picks the first match and that a repeated letter cycles, on a 300-option list with
+  the active option scrolled into view — the cases a regression reaches a user through. The
+  two-instances test exists because a shared id prefix would break `aria-activedescendant`
+  silently (see the ids decision above), and a `[(ngModel)]` test exists because template-driven
+  forms are an allowed consumer of the `ControlValueAccessor`.
 
 ## Deliberately not done
 

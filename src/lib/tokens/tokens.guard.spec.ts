@@ -103,3 +103,33 @@ describe('token layer guard', () => {
     expect([...dark].sort()).toEqual([...light].sort());
   });
 });
+
+/**
+ * A guard is only worth its green tick if it fails on a violation. This self-check
+ * runs the same rules over stylesheet text, so a pattern that quietly stops
+ * matching (the failure this file was written to catch) turns red here first.
+ */
+describe('token layer guard (self-check)', () => {
+  const scan = (source: string, pattern: RegExp): string[] =>
+    stripComments(source)
+      .split('\n')
+      .flatMap((line, index) => (pattern.test(line) ? [`synthetic.scss:${index + 1}`] : []));
+
+  const consumerViolations = (source: string): string[] =>
+    FORBIDDEN.filter(({ pattern }) => scan(source, pattern).length > 0).map(({ what }) => what);
+
+  it('flags each anti-pattern a consumer stylesheet could introduce', () => {
+    expect(consumerViolations('.x { color: #ff0000; }')).toEqual(['colour literal']);
+    expect(consumerViolations('.x { color: var(--cw-gray-900); }')).toEqual([
+      'primitive colour token',
+    ]);
+    expect(consumerViolations('.x { color: var(--cw-color-text) !important; }')).toEqual([
+      '!important',
+    ]);
+    expect(consumerViolations('.y ::ng-deep .z { color: red; }')).toEqual(['::ng-deep']);
+  });
+
+  it('leaves a well-behaved consumer stylesheet alone', () => {
+    expect(consumerViolations('.x { color: var(--cw-color-text); }')).toEqual([]);
+  });
+});

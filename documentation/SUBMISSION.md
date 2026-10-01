@@ -23,11 +23,23 @@ and boilerplate — signal inputs, the `ControlValueAccessor` skeleton, the ARIA
   on `combobox`, `textbox`, `group`, `application` or a composite widget (which is what rules out a
   plain `button` as the trigger), and `role="combobox"` on a `button` is valid HTML-ARIA — so the
   honest statement is "focus would have to move into the popup", not "a button cannot do it".
+- The new `cw-select` tests surfaced a real type-ahead bug: a second single-letter keystroke started
+  searching just after the active option, so it skipped the first match (`Ana`, `Bruno`, `Carla` →
+  `c` landed on `Carla`), and repeating a letter built a `"cc"` buffer that matched nothing. I wrote
+  the tests first, watched them fail (`expected 'Cesar' to be 'Carla'`), then fixed the search to
+  start at the top for a fresh query and only cycle for a repeated letter.
+- One red test was the test's fault, not the component's: seeding a `[(ngModel)]` host after the
+  first change detection threw `NG0100`, and because `writeValue` runs inside change detection the
+  DOM only refreshed on the next pass. I isolated it with a throwaway probe (the form control held
+  `'c'` while the DOM still showed the placeholder) and rewrote the test to seed the model before the
+  first check — which a running app gets for free from `ApplicationRef.tick`.
 
 **How I verified the result.** The token guard is verified by deliberately breaking it; every
 contrast ratio in the stylesheets was computed, not guessed; the ARIA behaviour was checked against
-WAI-ARIA 1.2, HTML-ARIA and the APG select-only example; and `npm test -- --watch=false` plus
-`npm run build` were run after each stage.
+WAI-ARIA 1.2, HTML-ARIA and the APG select-only example; and `ng test --watch=false` plus
+`npm run build` were run after each stage. The new tests were written to fail first — the type-ahead
+cases were run against the unfixed code and went red before the fix turned them green, which is how
+the bug above was found rather than assumed.
 
 ## Approximate time spent
 
@@ -38,15 +50,15 @@ no Storybook, no packaging pipeline and no virtual scrolling.
 
 ## What I would do next, in order
 
-1. **The focused test suite (Part 3)**: tests aimed at the riskiest behaviour rather than at
-   coverage — type-ahead against several hundred options, `[(ngModel)]` (template-driven) on the
-   same component, `disabled` arriving from the form control, and two pickers on one page to prove
-   ids stay unique.
-2. A **codemod/schematic** for the badge migration, and the golden test of `public-api.ts`
+The focused test suite (Part 3) now lives beside each component — `select.spec.ts`,
+`status-badge.spec.ts`, `app.spec.ts` and `tokens.guard.spec.ts`, 34 tests behind a single
+`ng test --watch=false`. What is left, in order:
+
+1. A **codemod/schematic** for the badge migration, and the golden test of `public-api.ts`
    described in `ADOPTION.md`.
-3. The **editable/filtering combobox** as an opt-in variant (see the trade-off in `DECISIONS.md`),
+2. The **editable/filtering combobox** as an opt-in variant (see the trade-off in `DECISIONS.md`),
    because discovering one option among hundreds is genuinely worse with type-ahead jumping.
-4. Packaging: turn `src/lib` into an `ng-packagr` library and publish the tokens as their own entry
+3. Packaging: turn `src/lib` into an `ng-packagr` library and publish the tokens as their own entry
    point, so the adoption story in `ADOPTION.md` is executable rather than described.
 
 ## One risk or limitation I knowingly left, and the next test for it
@@ -56,7 +68,8 @@ handling (explicitly out of scope in the brief). In a container with `overflow: 
 scrolling table row — the list will clip, and a second one is that typing **jumps** to a match
 rather than filtering, so a long list still relies on scrolling once the user stops typing.
 
-**The next test I would write.** Type-ahead on a 300-option list: open with a keystroke, assert the
-active option is the expected match, that it is the one referenced by `aria-activedescendant`, and
-that it scrolled into view — followed by the two-instances-on-one-page case, because a regression
-in "where the user is inside a long list" or in id uniqueness would reach a real user immediately.
+**The next test I would write.** The type-ahead and two-instances cases from the last iteration now
+exist, so the next one targets the clipping above: mount the picker in an `overflow: hidden`
+container and assert the list is clipped today, so the test starts failing the moment someone adds
+collision/flip handling. A regression in "where the user is inside a long list" or in id uniqueness
+would still reach a real user first, which is why those are already covered.
