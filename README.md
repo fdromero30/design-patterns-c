@@ -86,6 +86,18 @@ default and the alternative theme. Sample data lives in
 representative rather than exhaustive, so rely on the shapes rather than on specific ids,
 counts, ordering or values.
 
+## Screenshots
+
+Screenshots live in [`documentation/images/`](documentation/images), with a shot list describing
+what to capture and the exact filenames. The markup below is ready and commented out until the
+files exist, so the README never carries a broken image:
+
+<!--
+| Default theme | Alternative theme |
+| --- | --- |
+| ![The workbench in the default theme](documentation/images/workbench-light.png) | ![The workbench in the alternative theme](documentation/images/workbench-dark.png) |
+-->
+
 ## How the kit is put together
 
 The starter was intentionally open about the semantic token layer and how a theme overrides it,

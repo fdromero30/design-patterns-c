@@ -50,6 +50,19 @@ import type { CwSelectOption, CwStatus } from '../lib/public-api';
 - `data-status` and `data-size` on the host are the stable hooks for consumer styling; the
   class names inside are internal.
 
+## Screenshots
+
+Screenshots of each component, in both themes, live in
+[`../../documentation/images/`](../../documentation/images) (see the shot list there). The markup
+below is ready and commented out until the files exist:
+
+<!--
+| Component | Default theme | Alternative theme |
+| --- | --- | --- |
+| `cw-select` | ![cw-select with a value selected](../../documentation/images/cw-select-closed.png) | ![cw-select open in the alternative theme](../../documentation/images/cw-select-open.png) |
+| `cw-status-badge` | ![The four badge statuses](../../documentation/images/cw-status-badge-light.png) | ![The four badge statuses in the alternative theme](../../documentation/images/cw-status-badge-dark.png) |
+-->
+
 ## Theming
 
 The kit is built on three token levels in [`tokens/`](./tokens):
